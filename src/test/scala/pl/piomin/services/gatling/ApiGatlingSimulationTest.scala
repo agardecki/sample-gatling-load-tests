@@ -8,7 +8,7 @@ import java.util.Date
 import pl.piomin.services.gatling.model.Address
 import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.duration.Duration
-import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeUnit._
 
 class ApiGatlingSimulationTest extends Simulation {
 
@@ -19,7 +19,7 @@ class ApiGatlingSimulationTest extends Simulation {
             .header("Content-Type", "application/json")
             .body(StringBody("""{"firstName":"John${n}","lastName":"Smith${n}","birthDate":"1980-01-01", "address": {"country":"pl","city":"Warsaw","street":"Test${n}","postalCode":"02-200","houseNo":${n}}}"""))
             .check(status.is(200))
-        ).pause(Duration.apply(5, TimeUnit.MILLISECONDS))    
+        ).pause(Duration.apply(5, MILLISECONDS))
   }.repeat(1000, "n") {
         exec(
           http("GetPerson-API")
@@ -28,6 +28,6 @@ class ApiGatlingSimulationTest extends Simulation {
         )   
   }
   
-  setUp(scn.inject(atOnceUsers(30))).maxDuration(FiniteDuration.apply(10, "minutes"))
+  setUp(scn.inject(atOnceUsers(30))).maxDuration(FiniteDuration.apply(10, MINUTES))
   
 }

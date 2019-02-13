@@ -1,0 +1,13 @@
+{
+    "firstName": "John1",
+    "lastName": "Smith1",
+    "birthDate": "1980-01-01T00:00:00.000+0000",
+    "address": {
+        "country": "pl",
+        "city": "Warsaw",
+        "postalCode": "02-200",
+        "street": "Test1",
+        "houseNo": 1,
+        "flatNo": 0
+    }
+}
