@@ -12,4 +12,5 @@ gadlew bootJar
 java -jar build/libs/sample-load-test-gatling.jar
 
 ### Running tests
-gradle loadTest
+gradlew loadTest
+gradlew loadTest2
