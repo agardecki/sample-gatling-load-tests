@@ -13,4 +13,6 @@ java -jar build/libs/sample-load-test-gatling.jar
 
 ### Running tests
 gradlew loadTest
+
+
 gradlew loadTest2
