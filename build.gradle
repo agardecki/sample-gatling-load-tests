@@ -14,6 +14,7 @@ dependencies {
 	compile group: 'org.postgresql', name: 'postgresql', version: '42.1.4'
     testCompile group: 'io.gatling.highcharts', name: 'gatling-charts-highcharts', version: '3.0.3'
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
+    runtime group: 'com.h2database', name: 'h2', version: '1.4.197'
     runtime "javax.activation:activation:1.1.1"
     runtime 'javax.xml.bind:jaxb-api'
     runtime "com.sun.xml.bind:jaxb-core:2.2.11"
