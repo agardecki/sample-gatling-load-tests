@@ -5,11 +5,11 @@ Detailed description can be found here: [Perfomance Testing with Gatling](https:
 Running database
 docker run -d --name postgres -e POSTGRES_DB=gatling -e POSTGRES_USER=gatling -e POSTGRES_PASSWORD=gatling123 -p 5432:5432 postgres
 
-Building app
+### Building app
 gradlew bootJar
 
-Running app
+### Running app
 java -jar build/libs/sample-load-test-gatling.jar
 
-Running tests
-gradle loadTest
+### Running tests
+gradlew loadTest
