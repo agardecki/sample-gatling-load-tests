@@ -7,12 +7,17 @@ apply plugin: 'java-library'
 apply plugin: 'scala'
 apply plugin: 'java'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'groovy'
+
 
 dependencies {
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
 	compile group: 'org.postgresql', name: 'postgresql', version: '42.1.4'
     testCompile group: 'io.gatling.highcharts', name: 'gatling-charts-highcharts', version: '3.0.3'
+    testCompile group: 'io.gatling', name: 'gatling-app', version: '3.0.3'
+    testCompile group: 'io.gatling', name: 'gatling-recorder', version: '3.0.3'
+
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
     runtime group: 'com.h2database', name: 'h2', version: '1.4.197'
     runtime "javax.activation:activation:1.1.1"
@@ -33,6 +38,11 @@ bootJar {
     mainClassName = 'pl.piomin.services.gatling.ApiApplication'
 }
 
+bootRun {
+    main = 'pl.piomin.services.gatling.ApiApplication'
+    systemProperties = System.properties
+}
+
 task loadTest(type: JavaExec) {
    dependsOn testClasses
    description = "Load Test With Gatling"
@@ -43,7 +53,7 @@ task loadTest(type: JavaExec) {
    ]
    main = "io.gatling.app.Gatling"
    args = [
-           "--simulation", "pl.piomin.services.gatling.ApiGatlingSimulationTest",
+           "--simulation", "pl.piomin.services.gatling.allInOneFile.ApiGatlingSimulationTest",
            "--results-folder", "${buildDir}/gatling-results",
            "--binaries-folder", sourceSets.test.output.classesDir.toString(),
            "--bodies-folder", sourceSets.test.resources.srcDirs.toList().first().toString() + "/gatling/bodies",
@@ -60,10 +70,28 @@ task loadTest2(type: JavaExec) {
     ]
     main = "io.gatling.app.Gatling"
     args = [
-            "--simulation", "pl.piomin.services.gatling.RecordedSimulation",
+            "--simulation", "pl.piomin.services.gatling.allInOneFile.RecordedSimulation",
             "--results-folder", "${buildDir}/gatling-results",
             "--binaries-folder", sourceSets.test.output.classesDir.toString(),
             "--bodies-folder", sourceSets.test.resources.srcDirs.toList().first().toString() + "/gatling/bodies",
     ]
+}
+
+task bootRunH2(type: org.springframework.boot.gradle.tasks.run.BootRun) {
+    group = 'Application'
+    doFirst() {
+        main = 'pl.piomin.services.gatling.ApiApplication'
+        classpath = sourceSets.main.runtimeClasspath
+        systemProperty 'spring.profiles.active', 'h2'
+    }
+}
+
+task bootRunPostgres(type: org.springframework.boot.gradle.tasks.run.BootRun) {
+    group = 'Application'
+    doFirst() {
+        main = 'pl.piomin.services.gatling.ApiApplication'
+        classpath = sourceSets.main.runtimeClasspath
+        systemProperty 'spring.profiles.active', 'postgres'
+    }
 }
 
