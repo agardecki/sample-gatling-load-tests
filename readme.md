@@ -21,4 +21,4 @@ Before this please run Postgres database
 
 `gradlew loadTest`
 
-![alt text](https://github.com/agardecki/sample-gatling-load-tests/tree/master/img/gradle-tasks.png "Gradle tasks")
+![Gradle tasks](https://github.com/agardecki/sample-gatling-load-tests/blob/master/img/gradle-tasks.png "Gradle tasks")
