@@ -1,14 +1,7 @@
 package pl.piomin.services.gatling.model;
 
+import javax.persistence.*;
 import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 
 @Entity
 @SequenceGenerator(name = "seq_person", initialValue = 1, allocationSize = 1)

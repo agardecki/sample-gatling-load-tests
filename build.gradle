@@ -1,16 +1,46 @@
 plugins {
-    id 'org.springframework.boot' version '1.5.9.RELEASE'
+    id 'org.springframework.boot' version '2.0.1.RELEASE'
+    id 'java'
 }
 
 apply plugin: 'java-library'
 apply plugin: 'scala'
+apply plugin: 'java'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'groovy'
+
 
 dependencies {
-	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
-	compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
 	compile group: 'org.postgresql', name: 'postgresql', version: '42.1.4'
-    testCompile group: 'io.gatling.highcharts', name: 'gatling-charts-highcharts', version: '2.3.0'
+    testCompile group: 'io.gatling.highcharts', name: 'gatling-charts-highcharts', version: '3.0.3'
+    testCompile group: 'io.gatling', name: 'gatling-app', version: '3.0.3'
+    testCompile group: 'io.gatling', name: 'gatling-recorder', version: '3.0.3'
+
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
+    runtime group: 'com.h2database', name: 'h2', version: '1.4.197'
+    runtime "javax.activation:activation:1.1.1"
+    runtime 'javax.xml.bind:jaxb-api'
+    runtime "com.sun.xml.bind:jaxb-core:2.2.11"
+    runtime "com.sun.xml.bind:jaxb-impl:2.2.11"
+}
+
+repositories {
+    mavenCentral()
+}
+
+jar {
+    enabled = true
+}
+
+bootJar {
+    mainClassName = 'pl.piomin.services.gatling.ApiApplication'
+}
+
+bootRun {
+    main = 'pl.piomin.services.gatling.ApiApplication'
+    systemProperties = System.properties
 }
 
 task loadTest(type: JavaExec) {
@@ -23,10 +53,45 @@ task loadTest(type: JavaExec) {
    ]
    main = "io.gatling.app.Gatling"
    args = [
-           "--simulation", "pl.piomin.services.gatling.ApiGatlingSimulationTest",
+           "--simulation", "pl.piomin.services.gatling.allInOneFile.ApiGatlingSimulationTest",
            "--results-folder", "${buildDir}/gatling-results",
            "--binaries-folder", sourceSets.test.output.classesDir.toString(),
            "--bodies-folder", sourceSets.test.resources.srcDirs.toList().first().toString() + "/gatling/bodies",
    ]
+}
+
+task loadTest2(type: JavaExec) {
+    dependsOn testClasses
+    description = "Load Test With Gatling"
+    group = "Load Test"
+    classpath = sourceSets.test.runtimeClasspath
+    jvmArgs = [
+            "-Dgatling.core.directory.binaries=${sourceSets.test.output.classesDir.toString()}"
+    ]
+    main = "io.gatling.app.Gatling"
+    args = [
+            "--simulation", "pl.piomin.services.gatling.allInOneFile.RecordedSimulation",
+            "--results-folder", "${buildDir}/gatling-results",
+            "--binaries-folder", sourceSets.test.output.classesDir.toString(),
+            "--bodies-folder", sourceSets.test.resources.srcDirs.toList().first().toString() + "/gatling/bodies",
+    ]
+}
+
+task bootRunH2(type: org.springframework.boot.gradle.tasks.run.BootRun) {
+    group = 'Application'
+    doFirst() {
+        main = 'pl.piomin.services.gatling.ApiApplication'
+        classpath = sourceSets.main.runtimeClasspath
+        systemProperty 'spring.profiles.active', 'h2'
+    }
+}
+
+task bootRunPostgres(type: org.springframework.boot.gradle.tasks.run.BootRun) {
+    group = 'Application'
+    doFirst() {
+        main = 'pl.piomin.services.gatling.ApiApplication'
+        classpath = sourceSets.main.runtimeClasspath
+        systemProperty 'spring.profiles.active', 'postgres'
+    }
 }
 
