@@ -53,7 +53,7 @@ task loadTest(type: JavaExec) {
    ]
    main = "io.gatling.app.Gatling"
    args = [
-           "--simulation", "pl.piomin.services.gatling.allInOneFile.ApiGatlingSimulationTest",
+           "--simulation", "pl.piomin.services.gatling.simulation.allInOneFile.ApiGatlingSimulationTest",
            "--results-folder", "${buildDir}/gatling-results",
            "--binaries-folder", sourceSets.test.output.classesDir.toString(),
            "--bodies-folder", sourceSets.test.resources.srcDirs.toList().first().toString() + "/gatling/bodies",
@@ -70,7 +70,24 @@ task loadTest2(type: JavaExec) {
     ]
     main = "io.gatling.app.Gatling"
     args = [
-            "--simulation", "pl.piomin.services.gatling.allInOneFile.RecordedSimulation",
+            "--simulation", "pl.piomin.services.gatling.simulation.allInOneFile.RecordedSimulation",
+            "--results-folder", "${buildDir}/gatling-results",
+            "--binaries-folder", sourceSets.test.output.classesDir.toString(),
+            "--bodies-folder", sourceSets.test.resources.srcDirs.toList().first().toString() + "/gatling/bodies",
+    ]
+}
+
+task loadTest3(type: JavaExec) {
+    dependsOn testClasses
+    description = "Load Test With Gatling"
+    group = "Load Test"
+    classpath = sourceSets.test.runtimeClasspath
+    jvmArgs = [
+            "-Dgatling.core.directory.binaries=${sourceSets.test.output.classesDir.toString()}"
+    ]
+    main = "io.gatling.app.Gatling"
+    args = [
+            "--simulation", "pl.piomin.services.gatling.simulation.PersonSimulation",
             "--results-folder", "${buildDir}/gatling-results",
             "--binaries-folder", sourceSets.test.output.classesDir.toString(),
             "--bodies-folder", sourceSets.test.resources.srcDirs.toList().first().toString() + "/gatling/bodies",

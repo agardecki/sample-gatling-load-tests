@@ -19,6 +19,8 @@ Before this please run Postgres database
 ### Running tests
 `gradlew loadTest`
 
-`gradlew loadTest`
+`gradlew loadTest2`
+
+`gradlew loadTest3`
 
 ![Gradle tasks](https://github.com/agardecki/sample-gatling-load-tests/blob/master/img/gradle-tasks.png "Gradle tasks")
