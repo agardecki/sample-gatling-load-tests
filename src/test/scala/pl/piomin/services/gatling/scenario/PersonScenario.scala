@@ -9,7 +9,7 @@ object PersonScenario {
   val postPerson = exec(
     http("POST /persons")
       .post("/persons")
-      .body(StringBody("""{"firstName":"${firstName}","lastName":"{lastName}","birthDate":"1980-01-01", "address": {"country":"pl","city":"Warsaw","street":"${street}","postalCode":"02-200","houseNo":${houseNo}}}"""))
+      .body(StringBody("""{"firstName":"${firstName}","lastName":"${lastName}","birthDate":"1980-01-01", "address": {"country":"pl","city":"Warsaw","street":"${street}","postalCode":"02-200","houseNo":${houseNo}}}"""))
       .check(status.is(200))
       .check(jsonPath("$.id").saveAs("personId"))
   )
@@ -29,6 +29,11 @@ object PersonScenario {
       .check(jsonPath("$.id").count.saveAs("personCounts"))
   )
     .pause(1 second, 4 seconds)
+
+  val printPersonsCount = exec { session =>
+    println("personCounts: " + session("personCounts").as[String])
+    session
+  }
 
   val deletePerson = exec(
     http("DELETE /persons/{personId}")
